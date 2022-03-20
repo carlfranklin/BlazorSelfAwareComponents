@@ -4,9 +4,9 @@ This repo demonstrates how to use the awesome [BlazorIntersectionObserver](https
 
 BlazorIntersectionObserver uses the [Intersection Observer API](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API) which is available in modern browsers. The idea is that it has traditionally been very difficult to determine when an html element becomes visible relative to either a parent element or the main viewport.
 
-The BlazorIntersectionObserver README is pretty good at explaining things, but in my opinion, the demos don't drive home the concept or illustrate the behavior.
+The [BlazorIntersectionObserver README](https://github.com/ljbc1994/BlazorIntersectionObserver#readme) is pretty good at explaining things, but in my opinion, the demos don't drive home the concept or illustrate the behavior.
 
-This document is also serving as the script for BlazorTrain episode 73: Self-Aware Components. You can follow the steps here to gain a bit more understanding of BlazorIntersectionObserver.
+This document is also serving as the script for [BlazorTrain](https://blazortrain.com/) episode 73: Self-Aware Components. You can follow the steps here to gain a bit more understanding of BlazorIntersectionObserver.
 
 ## Making the case for self-awareness
 
@@ -14,7 +14,7 @@ Before we even get into Blazor components, let's get started with a quick demo t
 
 Create a new Blazor Server application in Visual Studio. It doesn't matter what you call it.
 
-Open the *\Pages\_Hosts.cshtml* file and change the `render-mode` from `ServerPrerendered` to `Server`
+Open the *Pages\\_Hosts.cshtml* file and change the `render-mode` from `ServerPrerendered` to `Server`
 
 ```html
 @page "/"
@@ -29,7 +29,7 @@ Open the *\Pages\_Hosts.cshtml* file and change the `render-mode` from `ServerPr
 
 ![image-20220320113654649](md-images/image-20220320113654649.png)
 
-To demonstrate default behavior, change *\Pages\Index.razor* to the following:
+To demonstrate default behavior, change *Pages\Index.razor* to the following:
 
 ```c#
 @page "/"
