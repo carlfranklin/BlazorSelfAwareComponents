@@ -1,0 +1,95 @@
+﻿@page "/"
+
+<PageTitle>Index</PageTitle>
+
+<h1>Hello, world!</h1>
+
+Welcome to your new app.
+<br/>
+<br/>
+<br/>
+<br/>
+
+<div>
+    @UnawareDivContent
+</div>
+<br/>
+<br/>
+<br/>
+<div style="overflow:auto;height:100px;width:100%;background-color:antiquewhite;padding:20px;">
+    <div>Item 1</div>
+    <div>Item 2</div>
+    <div>Item 3</div>
+    <div>Item 4</div>
+    <div>Item 5</div>
+    <div>Item 6</div>
+    <div>Item 7</div>
+    <div>Item 8</div>
+    <div>Item 9</div>
+    <div>Item 11</div>
+    <SelfAwareComponent Options=@Options1>
+        <div style="background-color:lightgray;padding:10px;">
+            <h4>This is a self aware component.</h4>
+            <div>@SelfAwareContent1</div>
+        </div>
+    </SelfAwareComponent>   
+</div>
+<br/>
+<br/>
+<SelfAwareComponent Options=@Options2>
+    <div style="background-color:lightgray;padding:10px;">
+        <h4>This is a self aware component.</h4>
+        <div>@SelfAwareContent2</div>
+    </div>
+</SelfAwareComponent>   
+<br/>
+<br/>
+<br/>
+<br/>
+
+@code{
+
+    IntersectionObserverOptions Options1 = new IntersectionObserverOptions
+    {
+        Root = null,
+        Threshold = new List<double> { 0, 1 },
+        RootMargin = "0px"
+    };
+
+    IntersectionObserverOptions Options2 = new IntersectionObserverOptions
+    {
+        Root = null,
+        Threshold = new List<double> { 0, .1, .2, .3, .4, .5, .6, .7, .8, .9, 1 },
+        RootMargin = "0px"
+    };
+
+    int unAwareCount = 0;
+    private string UnawareDivContent
+    {
+        get
+        {
+            unAwareCount++;
+            return $"Unaware content called {unAwareCount} times";
+        }
+    }
+
+    int selfAwareContentCount1 = 0;
+    private string SelfAwareContent1
+    {
+        get
+        {
+            selfAwareContentCount1++;
+            return $"Self Aware Content Refreshed {selfAwareContentCount1} times";
+        }
+    }
+
+    int selfAwareContentCount2 = 0;
+    private string SelfAwareContent2
+    {
+        get
+        {
+            selfAwareContentCount2++;
+            return $"Self Aware Content Refreshed {selfAwareContentCount2} times";
+        }
+    }
+}

@@ -1,0 +1,26 @@
+﻿<IntersectionObserve Once>
+    <div @ref="context.Ref.Current">
+        <div style="background-color:lightgray;padding:10px;margin-bottom:10px;">
+            <h4>This is a virtual component</h4>
+            @if (context.IsIntersecting)
+            {
+                @VirtualContent
+            }
+            else
+            {
+                <span>&nspb;</span>
+            }
+        </div>
+    </div>
+</IntersectionObserve>
+
+@code {
+
+    public string VirtualContent
+    {
+        get
+        {
+            return $"Component created at {DateTime.Now.ToLongTimeString()}";
+        }
+    }
+}

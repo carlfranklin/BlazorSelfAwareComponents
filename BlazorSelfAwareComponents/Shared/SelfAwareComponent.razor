@@ -1,0 +1,19 @@
+﻿<IntersectionObserve Options=@Options>
+    <CascadingValue Value=@this>
+        <div @ref="context.Ref.Current">
+            @if (context.IsIntersecting)
+            {
+                @ChildContent
+            }
+        </div>
+    </CascadingValue>
+</IntersectionObserve>
+
+@code {
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    [Parameter]
+    public IntersectionObserverOptions Options { get; set; }
+}

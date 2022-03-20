@@ -1,0 +1,12 @@
+﻿@page "/counter"
+
+<div style="overflow:auto;height:400px;width:100%;background-color:antiquewhite;padding:20px;">
+    @for (int i = 0; i < ComponentCount; i++)
+    {
+        <VirtualComponent/>
+    }
+</div>
+
+@code {
+    int ComponentCount { get; set; } = 25;
+}
