@@ -1081,3 +1081,46 @@ Run it again.
 
 Now that's better. Note the time of the first element. Scroll slowly to the bottom and note the time of the last element. Scroll back up, and the times have not changed.
 
+#### More Control
+
+The `Once` parameter is handy if you want your component to render once and then dispose, but what if you want to make subtle changes, such as showing a current statistic, when the component comes back into view again. With a slight change of code, we can control what gets rendered and when. 
+
+Modify *Shared\VirtualComponent.razor* to the following:
+
+```c#
+<IntersectionObserve>
+    <div @ref="context.Ref.Current">
+        <div style="background-color:lightgray;padding:10px;margin-bottom:10px;">
+            <h4>This is a virtual component</h4>
+            @if (context.IsIntersecting)
+            {
+                @VirtualContent
+            }
+            else
+            {
+                <span>&nspb;</span>
+            }
+        </div>
+    </div>
+</IntersectionObserve>
+
+@code {
+
+    private string virtualContent = "";
+    public string VirtualContent
+    {
+        get
+        {
+            if (virtualContent == "")
+                virtualContent = 
+                   $"Component created at {DateTime.Now.ToLongTimeString()}";
+            return virtualContent;
+        }
+    }
+}
+```
+
+Rather than getting rendered once, now our component initializes the custom content, but then gets an opportunity to modify it. The behavior in this example is to *not* change it, but you can see from the logic how easy it would be. 
+
+Run the app. It should look exactly the same as the previous version (using `Once`) but now it continues to render, and you can control the content every time.
+
