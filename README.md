@@ -1204,15 +1204,22 @@ Modify *Shared\VirtualComponent.razor* to the following:
         get
         {
             if (virtualContent == "")
+            {
+                // create the initial content
                 virtualContent = 
                    $"Component created at {DateTime.Now.ToLongTimeString()}";
-            return virtualContent;
+                return virtualContent;
+            }
+            else
+                // return a modified version of the initial content
+                return $"{virtualContent} updated at "
+                    + "{DateTime.Now.ToLongTimeString()}" ;
         }
     }
 }
 ```
 
-Rather than getting rendered once, now our component initializes the custom content, but then gets an opportunity to modify it. The behavior in this example is to *not* change it, but you can see from the logic how easy it would be. 
+Rather than getting rendered once, now our component initializes the custom content, but then gets an opportunity to modify it. 
 
 Run the app. It should look exactly the same as the previous version (using `Once`) but now it continues to render, and you can control the content every time.
 
