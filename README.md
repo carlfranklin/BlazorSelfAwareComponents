@@ -434,8 +434,6 @@ However, I don't think the demo in the README really drives home the behavior. T
 
 Change *Index.razor* to the following:
 
-
-
 ```c#
 @page "/"
 @inject IIntersectionObserverService ObserverService
@@ -1063,6 +1061,138 @@ Bring the first `SelfAwareComponent` into view and then resize using the show/hi
 ![image-20220320140906714](md-images/image-20220320140906714.png)
 
 It should be obvious that the first (child) component has more threshold values than the second one.
+
+#### Add Style and Class parameters
+
+We can further reduce the amount of layers we need to define in our app when using `SelfAwareComponent` by adding two string parameters, `Class` and `Style`.
+
+*SelfAwareComponent.razor:*
+
+```c#
+<IntersectionObserve Options=@Options>
+    <CascadingValue Value=@this>
+        <div @ref="context.Ref.Current" class="@Class" style="@Style">
+            @if (context.IsIntersecting)
+            {
+                @ChildContent
+            }
+        </div>
+    </CascadingValue>
+</IntersectionObserve>
+
+@code {
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    [Parameter]
+    public IntersectionObserverOptions Options { get; set; }
+
+    [Parameter]
+    public string Class { get; set; } = "";
+
+    [Parameter]
+    public string Style { get; set; } = "";
+}
+```
+
+Now we can simplify the instantiations of the component:
+
+*Index.razor*:
+
+```c#
+@page "/"
+
+<PageTitle>Index</PageTitle>
+
+<h1>Hello, world!</h1>
+
+Welcome to your new app.
+<br/>
+<br/>
+<br/>
+<br/>
+
+<div>
+    @UnawareDivContent
+</div>
+<br/>
+<br/>
+<br/>
+<div style="overflow:auto;height:100px;width:100%;background-color:antiquewhite;padding:20px;">
+    <div>Item 1</div>
+    <div>Item 2</div>
+    <div>Item 3</div>
+    <div>Item 4</div>
+    <div>Item 5</div>
+    <div>Item 6</div>
+    <div>Item 7</div>
+    <div>Item 8</div>
+    <div>Item 9</div>
+    <div>Item 11</div>
+    <SelfAwareComponent Options=@Options1 Style="background-color:lightgray;padding:10px;">
+        <h4>This is a self aware component.</h4>
+        <div>@SelfAwareContent1</div>
+    </SelfAwareComponent>   
+</div>
+<br/>
+<br/>
+<SelfAwareComponent Options=@Options2 Style="background-color:lightgray;padding:10px;">
+    <h4>This is a self aware component.</h4>
+    <div>@SelfAwareContent2</div>
+</SelfAwareComponent>   
+<br/>
+<br/>
+<br/>
+<br/>
+
+@code{
+
+    IntersectionObserverOptions Options1 = new IntersectionObserverOptions
+    {
+        Root = null,
+        Threshold = new List<double> { 0, 1 },
+        RootMargin = "0px"
+    };
+
+    IntersectionObserverOptions Options2 = new IntersectionObserverOptions
+    {
+        Root = null,
+        Threshold = new List<double> { 0, .1, .2, .3, .4, .5, .6, .7, .8, .9, 1 },
+        RootMargin = "0px"
+    };
+
+    int unAwareCount = 0;
+    private string UnawareDivContent
+    {
+        get
+        {
+            unAwareCount++;
+            return $"Unaware content called {unAwareCount} times";
+        }
+    }
+
+    int selfAwareContentCount1 = 0;
+    private string SelfAwareContent1
+    {
+        get
+        {
+            selfAwareContentCount1++;
+            return $"Self Aware Content Refreshed {selfAwareContentCount1} times";
+        }
+    }
+
+    int selfAwareContentCount2 = 0;
+    private string SelfAwareContent2
+    {
+        get
+        {
+            selfAwareContentCount2++;
+            return $"Self Aware Content Refreshed {selfAwareContentCount2} times";
+        }
+    }
+}
+```
 
 #### Custom Components
 

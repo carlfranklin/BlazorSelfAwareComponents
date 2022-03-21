@@ -1,6 +1,6 @@
 ﻿<IntersectionObserve Options=@Options>
     <CascadingValue Value=@this>
-        <div @ref="context.Ref.Current">
+        <div @ref="context.Ref.Current" class="@Class" style="@Style">
             @if (context.IsIntersecting)
             {
                 @ChildContent
@@ -16,4 +16,10 @@
 
     [Parameter]
     public IntersectionObserverOptions Options { get; set; }
+
+    [Parameter]
+    public string Class { get; set; } = "";
+
+    [Parameter]
+    public string Style { get; set; } = "";
 }
