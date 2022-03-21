@@ -17,13 +17,6 @@ Create a new Blazor Server application in Visual Studio. It doesn't matter what 
 Open the *Pages\\_Hosts.cshtml* file and change the `render-mode` from `ServerPrerendered` to `Server`
 
 ```html
-@page "/"
-@namespace BlazorSelfAwareComponents.Pages
-@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
-@{
-    Layout = "_Layout";
-}
-
 <component type="typeof(App)" render-mode="Server" />
 ```
 
