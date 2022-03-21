@@ -578,9 +578,108 @@ By now it should be obvious what we're doing here. Run the app and resize it.
 
 ![image-20220320134544203](md-images/image-20220320134544203.png)
 
+#### Explain this curious behavior
+
+Let's combine the `ObserverService` event handler that we saw a moment ago with an `IntersectionObserve` on the same page and see what happens. 
+
+Change *Index.razor* to the following:
+
+```c#
+@page "/"
+@inject IIntersectionObserverService ObserverService
+
+<PageTitle>Index</PageTitle>
+
+<h1>Hello, world!</h1>
+
+@if (ImageEntry != null)
+{
+    @if (ImageEntry.IsIntersecting)
+    {
+        <span>Image is visible and the ratio is @ImageEntry.IntersectionRatio</span>
+    }
+    else
+    {
+        <span>Image is NOT visible</span>
+    }
+}
+
+<br />
+<br />
+<br />
+<IntersectionObserve>
+    <div @ref="context.Ref.Current">
+        @if (context.IsIntersecting)
+        {
+            // do what you need to do here. You're visible!
+            <div style="font-size:large;font-weight:bold;">@GetDynamicDivContent</div>
+        }
+    </div>
+</IntersectionObserve>
+<br />
+<br />
+
+<img @ref="ImageElement" src="https://www.placecage.com/g/500/500" />
+
+
+
+<br />
+<br />
+More stuff
+
+@code {
+
+    public ElementReference ImageElement { get; set; }
+
+    public IntersectionObserverEntry ImageEntry;
+
+    private string GetDynamicDivContent
+    {
+        get
+        {
+            return $"Hey! I'm here at {DateTime.Now.ToLongTimeString()}";
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await SetupObserver();
+        }
+    }
+
+    public async Task SetupObserver()
+    {
+        var options = new IntersectionObserverOptions
+        {
+            Root = null,
+            Threshold = new List<double> { 0, .1, .2, .3, .4, .5, .6, .7, .8, .9, 1 },
+            RootMargin = "0px"
+        };
+
+        await ObserverService.Observe(ImageElement, (entries) =>
+        {
+            ImageEntry = entries.FirstOrDefault();
+            StateHasChanged();
+        }, options);
+    }
+}
+```
+
+Why does the `IntersectionObserve` content refresh as we're resizing the browser, covering up the `<img>`? After all, the `IntersectionObserve` doesn't define any options with Threshold values.
+
+The answer lies in this code:
+
+![image-20220321005235439](md-images/image-20220321005235439.png)
+
+The service is defined at the page level, outside of the context of the `IntersectionObserve` component. Whenever the event changes on the `ImageElement`, `StateHasChanged()` is called, which causes ALL of the components on the page to refresh, including the content inside of the `IntersectionObserve` component.
+
+So, clearly the need to keep all of this code inside individual components is necessary. Let's do that.
+
 #### And now for something more practical
 
-We can make a cleaner component by subclassing `IntersectionObserve`
+We can make a clean component by subclassing `IntersectionObserve`
 
 Add the following Razor Component to the *Shared* folder:
 
